@@ -22,8 +22,8 @@ export default {
     findSongsFromPlaylistId(id) {
         return Vue.prototype.$axios.get(`/playlists/${id}/songs`);
     },
-    insertSongsInPlaylist(id, payload) {
-        return Vue.prototype.$axios.put(`/playlists/${id}/songs`, payload);
+    insertSongsInPlaylist(id1, id2) {
+        return Vue.prototype.$axios.put(`/playlists/${id1}/song/${id2}`);
     },
     changeSongsInPlaylists(id1, id2) {
         return Vue.prototype.$axios.put(`/playlists/change/${id1}/${id2}`); //`

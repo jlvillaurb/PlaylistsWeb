@@ -11,7 +11,7 @@
           class="row"
         >
           <q-item-section class="col-auto">
-            <q-icon :name="list.icon" size="md" color="primary" />
+            <q-icon name="navigate_next" size="md" color="primary" />
           </q-item-section>
 
           <q-item-section class="col-auto">
@@ -63,10 +63,10 @@
                 />
                 <q-input
                   dense
-                  v-model="newSong.newauthor"
+                  v-model="newSong.newAuthor"
                   autofocus
                   @keyup.enter="prompt = false"
-                  label="author"
+                  label="Author"
                 />
                 <q-input
                   dense
@@ -186,13 +186,13 @@
                     class="row"
                   >
                     <q-item-section class="col-auto">
-                      <q-icon :name="list.icon" size="md" color="primary" />
+                      <q-icon name="navigate_next" size="md" color="primary" />
                     </q-item-section>
 
                     <q-item-section class="col-auto">
                       <q-item-label
                         class="text-black text-h6 text-left"
-                        @click="addSong2List(props.row)"
+                        @click="addSong2List(props.row, list)"
                         v-close-popup
                       >
                         {{ list.title }}
@@ -241,10 +241,11 @@ export default {
         rowsPerPage: 0
       },
       today: date.toLocaleString(),
-
+      currentPlaylist: null,
       newSong: {
+        id: null,
         newName: null,
-        newauthor: "",
+        newAuthor: "",
         newAlbum: "",
         newDuration: "",
         newDate: ""
@@ -252,7 +253,6 @@ export default {
       },
 
       newList: [],
-
       playlists: [],
 
       columns: [
@@ -271,7 +271,7 @@ export default {
         {
           name: "author",
           align: "left",
-          label: "author",
+          label: "Author",
           field: "author",
           sortable: true
         },
@@ -320,6 +320,7 @@ export default {
   mounted() {
     this.getAllPlaylists();
     this.getAllSongs();
+    this.onSubmit();
   },
 
   //Metodos para cambiar data(), no devuelven valores
@@ -341,6 +342,15 @@ export default {
       "findSongsFromPlaylistId",
       "changeSongsInPlaylists"
     ]),
+    ...mapActions("users", ["login"]),
+    async onSubmit() {
+      await this.login({
+        username: "Hector", //this.email,
+        password: "1111" //this.password
+      });
+      //this.$router.push({ name: "playlists" });
+    },
+
     // MAP ACTIONS
     async getAllSongs() {
       this.newList = await this.showAllSongs();
@@ -348,16 +358,49 @@ export default {
     async getAllPlaylists() {
       this.playlists = await this.showAllPlaylists();
     },
-    async insertNewSong() {
+
+    //Para añadir una nueva canción
+    async addSong() {
       if (this.newSong.newName != null) {
         await this.insertSong({
+          //song: {
           name: this.newSong.newName,
-          author: this.newSong.newauthor,
+          author: this.newSong.newAuthor,
+          album: this.newSong.newAlbum,
+          duration: this.newSong.newDuration,
+          release_date: date.formatDate(
+            this.newSong.newDate,
+            "YYYY-MM-DD hh:mm:ss"
+          )
+        });
+        this.newList.push({
+          name: this.newSong.newName,
+          author: this.newSong.newAuthor,
           album: this.newSong.newAlbum,
           duration: this.newSong.newDuration,
           release_date: this.newSong.newDate
+          //genres: this.newSong.newGenres
         });
       }
+      this.newSong.id = null;
+      this.newSong.newName = null;
+      this.newSong.newAuthor = "";
+      this.newSong.newAlbum = "";
+      this.newSong.newDuration = "";
+      this.newSong.newDate = "";
+      //(this.newSong.newGenres = []),
+      this.prompt = false;
+      this.getAllSongs();
+    },
+
+    async insertSongIntoPlaylist() {
+      if (this.newSong.newName != null) {
+        await this.insertSongsInPlaylist({
+          id1: this.currentPlaylist.id,
+          id2: this.newSong.id
+        });
+      }
+      this.getAllPlaylists();
     },
 
     // /// /// // // // /// // // /// // ////
@@ -389,39 +432,20 @@ export default {
       return info;
     },
 
-    addSong2List(song) {
+    addSong2List(song, list) {
       this.newSongx(song);
-      this.addSong();
+      this.currentPlaylist = list;
+      this.insertSongIntoPlaylist();
     },
 
     newSongx(Song) {
+      this.newSong.id = Song.id;
       this.newSong.newName = Song.name;
-      this.newSong.newauthor = Song.author;
+      this.newSong.newAuthor = Song.author;
       this.newSong.newAlbum = Song.album;
       this.newSong.newDuration = Song.duration;
       this.newSong.newDate = Song.release_date;
       //this.newSong.newGenres = Song.genres;
-    },
-
-    //Para añadir una nueva canción
-    addSong() {
-      if (this.newSong.newName != null) {
-        this.newList.push({
-          name: this.newSong.newName,
-          author: this.newSong.newauthor,
-          album: this.newSong.newAlbum,
-          duration: this.newSong.newDuration,
-          release_date: this.newSong.newDate
-          //genres: this.newSong.newGenres
-        });
-      }
-      this.newSong.newName = null;
-      this.newSong.newauthor = "";
-      this.newSong.newAlbum = "";
-      this.newSong.newDuration = "";
-      this.newSong.newDate = "";
-      //(this.newSong.newGenres = []),
-      this.prompt = false;
     }
   }
 };

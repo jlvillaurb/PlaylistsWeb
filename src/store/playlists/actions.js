@@ -99,8 +99,8 @@ export function setLang(context, lang) {
   export async function insertSongsInPlaylist(context, payload) {
     try {
       const response = await PlaylistService.insertSongsInPlaylist(
-        payload.id,
-        payload.song
+        payload.id1,
+        payload.id2
       );
       if (response.status >= 200 && response.status < 300) {
         // Show a success notification (like a toast)

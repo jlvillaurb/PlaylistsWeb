@@ -1,23 +1,16 @@
-import Vue from "vue";
+import UserServices from "src/services/UserServices";
+import LoginServices from "src/services/LoginServices";
 
-export default {
-    showAllUsers() {
-        return Vue.prototype.$axios.get(``);
-    },
-    showUsersById(id) {
-        return Vue.prototype.$axios.get(`${id}`);
-    },
-    insertUser(payload) {
-        return Vue.prototype.$axios.post(``, payload);
-    },
-    updateUser(payload) {
-        return Vue.prototype.$axios.put(`${id}`, payload);
-    },
-    deleteUserById(id) {
-        return Vue.prototype.$axios.delete(`${id}`);
-    },
-    insertPlaylist(id, payload) {
-        return Vue.prototype.$axios.post(`insert/${id}`, payload);
-    },
-
-};
+export async function login(context, payload) {
+  try {
+    const response = await LoginServices.login(payload);
+    if (response.status >= 200 && response.status < 300) {
+      // Show a success notification (like a toast)
+      //utils.notify("positive", i18n.t("notify.success"));
+      // Resolve the promise returning the status
+      return Promise.resolve(response);
+    }
+  } catch (error) {
+    //utils.notify("negative", utils.getErrorByCode(error));
+  }
+}
