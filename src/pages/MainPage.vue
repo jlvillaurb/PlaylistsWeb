@@ -94,7 +94,7 @@
             <q-item-label
               class="text-black text-h6 text-left"
               :class="
-                currentList == list.title
+                currentPlaylist.name == list.title
                   ? 'text-black text-h6 text-left text-weight-bolder'
                   : 'text-black text-h6 text-left'
               "
@@ -106,7 +106,7 @@
       </q-list>
     </div>
 
-    <!-- Playlist of currentList -->
+    <!-- Playlist of currentPlaylist.name -->
     <div class="q-pa-md col-10">
       <q-table
         :data="currentPlaylist.songs"
@@ -294,7 +294,6 @@ export default {
     return {
       left: true,
       valor: 2,
-      currentList: "",
       seconds: 0,
       minutes: 0,
       prompt: false,
@@ -405,6 +404,58 @@ export default {
   computed: {},
 
   methods: {
+    // MAP ACTIONS LOGIN
+    ...mapActions("users", ["login"]),
+
+    async onSubmit() {
+      await this.login({
+        username: "Hector", //this.email,
+        password: "1111" //this.password
+      });
+      //this.$router.push({ name: "playlists" });
+    },
+
+    // MAP ACTIONS SONGS
+    ...mapActions("songs", [
+      "showAllSongs",
+      "showSongById",
+      "insertSong",
+      "updateSongById",
+      "deleteSongById"
+    ]),
+    async addSong() {
+      if (this.newSong.newName != null) {
+        await this.insertSong({
+          //song: {
+          name: this.newSong.newName,
+          author: this.newSong.newAuthor,
+          album: this.newSong.newAlbum,
+          duration: this.newSong.newDuration,
+          release_date: date.formatDate(
+            this.newSong.newDate,
+            "YYYY-MM-DD hh:mm:ss"
+          )
+        });
+        this.currentPlaylist.songs.push({
+          name: this.newSong.newName,
+          author: this.newSong.newAuthor,
+          album: this.newSong.newAlbum,
+          duration: this.newSong.newDuration,
+          release_date: this.newSong.newDate
+          //genres: this.newSong.newGenres
+        });
+      }
+      this.newSong.id = null;
+      this.newSong.newName = null;
+      this.newSong.newAuthor = "";
+      this.newSong.newAlbum = "";
+      this.newSong.newDuration = "";
+      this.newSong.newDate = "";
+      //(this.newSong.newGenres = []),
+      this.prompt = false;
+      this.getAllSongs();
+    },
+
     ...mapActions("playlists", [
       "showAllPlaylists",
       "showAllPlaylistsUserLogged",
@@ -423,19 +474,15 @@ export default {
         if (this.$route.params.id) {
           for (let i = 0; i < this.playlists.length; i++) {
             if (this.$route.params.id == this.playlists[i].title) {
-              this.currentList = this.$route.params.id;
               this.currentPlaylist.name = this.$route.params.id;
               break;
             } else {
-              this.currentList = "Flamenco";
               this.currentPlaylist.name = "Flamenco";
             }
           }
         } else if (this.playlists.length > 0) {
-          this.currentList = this.playlists[0].title;
           this.currentPlaylist.name = this.playlists[0].title;
         } else {
-          this.currentList = "No Playlists Created";
           this.currentPlaylist.name = "No Playlists Created";
         }
         this.isFirst = false;
@@ -444,10 +491,12 @@ export default {
       this.getSongsByPlaylist();
     },
 
+    //Cargamos las canciones en currentPlaylist y guardamos el id
     async getSongsByPlaylist() {
       let selectedPlaylist = this.playlists.find(
-        item => item.title == this.currentList
+        item => item.title == this.currentPlaylist.name
       );
+      this.currentPlaylist.id = selectedPlaylist.id;
       this.currentPlaylist.songs = await this.findSongsFromPlaylistId(
         selectedPlaylist.id
       );
@@ -490,6 +539,7 @@ export default {
     },
 
     async insertSongIntoPlaylist() {
+      this.addSong();
       if (this.newSong.newName != null) {
         await this.insertSongsInPlaylist({
           id1: this.currentPlaylist.id,
@@ -497,14 +547,12 @@ export default {
         });
       }
       this.getAllPlaylists();
-      this.addSong();
     },
 
     // // /// /// /// // // // // // // /// /// /// //
     //PAGE FUNCTIONS
     //Para realizar el cambio de playlists
     changeList(title) {
-      this.currentList = title;
       this.currentPlaylist.name = title;
       this.getAllPlaylists();
     },
@@ -561,32 +609,6 @@ export default {
 
     saveSong(song) {
       this.newSong = song;
-    },
-
-    //Para añadir una nueva canción al currentPlaylist
-    addSong() {
-      if (this.newSong.name != null) {
-        if (this.currentList == this.currentPlaylist.name) {
-          this.currentPlaylist.songs.push({
-            id: this.newSong.id,
-            name: this.newSong.name,
-            author: this.newSong.author,
-            album: this.newSong.album,
-            duration: this.newSong.duration,
-            release_date: this.newSong.release_date
-            //genres: this.newSong.genres
-          });
-        }
-      }
-      this.newSong.id = null;
-      this.newSong.name = null;
-      this.newSong.author = "";
-      this.newSong.album = "";
-      this.newSong.duration = "";
-      this.newSong.release_date = "";
-      //this.newSong.genres = [];
-      this.editPromp = false;
-      this.prompt = false;
     }
   }
 };

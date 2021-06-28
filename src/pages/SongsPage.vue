@@ -23,10 +23,10 @@
       </q-list>
     </div>
 
-    <!-- Playlist of currentList -->
+    <!-- Playlist of currentPlaylist.songs -->
     <div class="q-pa-md col-10">
       <q-table
-        :data="newList"
+        :data="currentPlaylist.songs"
         :columns="columns"
         row-key="name"
         virtual-scroll
@@ -192,7 +192,7 @@
                     <q-item-section class="col-auto">
                       <q-item-label
                         class="text-black text-h6 text-left"
-                        @click="addSong2List(props.row, list)"
+                        @click="addSong2Playlist(props.row, list)"
                         v-close-popup
                       >
                         {{ list.title }}
@@ -241,7 +241,11 @@ export default {
         rowsPerPage: 0
       },
       today: date.toLocaleString(),
-      currentPlaylist: null,
+      currentPlaylist: {
+        id: null,
+        name: "",
+        songs: []
+      },
       newSong: {
         id: null,
         newName: null,
@@ -251,8 +255,6 @@ export default {
         newDate: ""
         //newGenres: []
       },
-
-      newList: [],
       playlists: [],
 
       columns: [
@@ -345,7 +347,7 @@ export default {
       "deleteSongById"
     ]),
     async getAllSongs() {
-      this.newList = await this.showAllSongs();
+      this.currentPlaylist.songs = await this.showAllSongs();
     },
     //Para añadir una nueva canción
     async addSong() {
@@ -361,7 +363,7 @@ export default {
             "YYYY-MM-DD hh:mm:ss"
           )
         });
-        this.newList.push({
+        this.currentPlaylist.songs.push({
           name: this.newSong.newName,
           author: this.newSong.newAuthor,
           album: this.newSong.newAlbum,
@@ -408,6 +410,23 @@ export default {
     },
 
     // /// /// // // // /// // // /// // ////
+    addSong2Playlist(song, list) {
+      this.newSongx(song);
+      this.currentPlaylist = list;
+      this.insertSongIntoPlaylist();
+    },
+
+    newSongx(Song) {
+      this.newSong.id = Song.id;
+      this.newSong.newName = Song.name;
+      this.newSong.newAuthor = Song.author;
+      this.newSong.newAlbum = Song.album;
+      this.newSong.newDuration = Song.duration;
+      this.newSong.newDate = Song.release_date;
+      //this.newSong.newGenres = Song.genres;
+    },
+
+    // UTIL
     //Para cambiar el formato de la duracion a min:sec
     minutesFormat(time) {
       let minutes = Math.floor(time / 60);
@@ -434,22 +453,6 @@ export default {
     genresFormat(genres) {
       let info = genres.toString();
       return info;
-    },
-
-    addSong2List(song, list) {
-      this.newSongx(song);
-      this.currentPlaylist = list;
-      this.insertSongIntoPlaylist();
-    },
-
-    newSongx(Song) {
-      this.newSong.id = Song.id;
-      this.newSong.newName = Song.name;
-      this.newSong.newAuthor = Song.author;
-      this.newSong.newAlbum = Song.album;
-      this.newSong.newDuration = Song.duration;
-      this.newSong.newDate = Song.release_date;
-      //this.newSong.newGenres = Song.genres;
     }
   }
 };
