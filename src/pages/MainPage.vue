@@ -78,6 +78,39 @@
 
     <!-- Left Playlist List-->
     <div bordered :width="250" class="col-2">
+      <!-- Prompt Add Playlist -->
+      <q-btn
+        class="col-auto q-mb-sm"
+        style="margin-bottom-sm"
+        color="primary"
+        label="+ Playlist"
+        @click="promptP = true"
+      />
+      <q-dialog v-model="promptP" persistent>
+        <q-card style="min-width: 350px">
+          <q-card-section>
+            <div class="text-h6">Add New Playlist</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            <q-input
+              dense
+              v-model="newPlaylist.name"
+              autofocus
+              @keyup.enter="promptP = false"
+              label="Title New Playlist"
+            />
+          </q-card-section>
+
+          <!-- Boton Añade Cancion -->
+          <q-card-actions align="right" class="text-primary">
+            <q-btn flat label="Add" @click="addPlaylist()" />
+            <q-btn flat label="Cancel" v-close-popup />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+
+      <!-- Lista de Playlists del Usuario -->
       <q-list>
         <q-item
           clickable
@@ -124,14 +157,14 @@
             {{ currentPlaylist.name }}
           </div>
           <q-space><!-- Rellena el espacio todo lo que pueda --></q-space>
+
+          <!-- Prompt Add Song -->
           <q-btn
             class="col-auto"
             color="primary"
             label="Add Song to Playlist"
             @click="prompt = true"
           />
-
-          <!-- Prompt Add Song -->
           <q-dialog v-model="prompt" persistent>
             <q-card style="min-width: 350px">
               <q-card-section>
@@ -297,6 +330,7 @@ export default {
       seconds: 0,
       minutes: 0,
       prompt: false,
+      promptP: false,
       editPromp: false,
       today: date.toLocaleString(),
       isFirst: true,
@@ -330,6 +364,7 @@ export default {
       newPlaylistIndex: -1,
       newPlaylistId: null,
       newPlaylist: {
+        id: null,
         name: null,
         songs: []
       },
@@ -401,8 +436,6 @@ export default {
     //Si hay un id de entrada, tomamos ese valor para enseñar la playlist correspondiente
     this.getAllPlaylists();
   },
-
-  computed: {},
 
   methods: {
     // MAP ACTIONS LOGIN
@@ -517,34 +550,16 @@ export default {
       );
     },
 
-    async addPlaylist(playlist) {
-      console.log(1);
+    async addPlaylist() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        this.currentPlaylist.songs.push({
-          /*id: this.newSong.id,
-          name: this.newSong.name,
-          author: this.newSong.author,
-          album: this.newSong.album,
-          duration: this.newSong.duration,
-          release_date: this.newSong.release_date*/
-        });
-        console.log(2);
-        await this.insertPlaylist({
-          id: this.newPlaylist.id,
+        let response = await this.insertPlaylist({
           name: this.newPlaylist.name,
           songs: this.newPlaylist.songs
         });
-        console.log(3);
-        //addCalendarDialog == false;
-        this.getAllPlaylists();
-
-        this.newSong.id = null;
-        this.newSong.name = null;
-        this.newSong.author = null;
-        this.newSong.album = null;
-        this.newSong.duration = null;
-        this.newSong.release_date = null;
+        if (response.status == 200) {
+          this.getAllPlaylists();
+        }
       }
     },
 
