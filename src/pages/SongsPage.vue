@@ -2,6 +2,40 @@
   <div class="q-pa-md row">
     <div bordered :width="250" class="col-2">
       <!-- Left Playlist List-->
+
+      <!-- Prompt Add Playlist -->
+      <q-btn
+        class="col-auto q-mb-sm"
+        style="margin-bottom-sm"
+        color="primary"
+        label="+ Playlist"
+        @click="promptP = true"
+      />
+      <q-dialog v-model="promptP" persistent>
+        <q-card style="min-width: 350px">
+          <q-card-section>
+            <div class="text-h6">Add New Playlist</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            <q-input
+              dense
+              v-model="newPlaylist.title"
+              autofocus
+              @keyup.enter="promptP = false"
+              label="Title New Playlist"
+            />
+          </q-card-section>
+
+          <!-- Boton Añade Cancion -->
+          <q-card-actions align="right" class="text-primary">
+            <q-btn flat label="Add" @click="addPlaylist()" />
+            <q-btn flat label="Cancel" v-close-popup />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+
+      <!-- Lista de Playlists del Usuario -->
       <q-list>
         <q-item
           clickable
@@ -236,12 +270,18 @@ export default {
       seconds: 0,
       minutes: 0,
       prompt: false,
+      promptP: false,
       songPopup: false,
       pagination: {
         rowsPerPage: 0
       },
       today: date.toLocaleString(),
       currentPlaylist: {
+        id: null,
+        name: "",
+        songs: []
+      },
+      newPlaylist: {
         id: null,
         name: "",
         songs: []
@@ -352,7 +392,7 @@ export default {
     //Para añadir una nueva canción
     async addSong() {
       if (this.newSong.newName != null) {
-        await this.insertSong({
+        let response = await this.insertSong({
           //song: {
           name: this.newSong.newName,
           author: this.newSong.newAuthor,
@@ -371,16 +411,19 @@ export default {
           release_date: this.newSong.newDate
           //genres: this.newSong.newGenres
         });
+        if (response == 200) {
+          this.getAllSongs();
+        } else {
+          console.log("error");
+        }
       }
-      this.newSong.id = null;
       this.newSong.newName = null;
-      this.newSong.newAuthor = "";
-      this.newSong.newAlbum = "";
-      this.newSong.newDuration = "";
-      this.newSong.newDate = "";
+      this.newSong.newAuthor = null;
+      this.newSong.newAlbum = null;
+      this.newSong.newDuration = null;
+      this.newSong.newDate = null;
       //(this.newSong.newGenres = []),
       this.prompt = false;
-      this.getAllSongs();
     },
 
     // MAP ACTIONS PLAYLISTS
@@ -401,18 +444,23 @@ export default {
 
     async insertSongIntoPlaylist() {
       if (this.newSong.newName != null) {
-        await this.insertSongsInPlaylist({
+        let response = await this.insertSongsInPlaylist({
           id1: this.currentPlaylist.id,
           id2: this.newSong.id
         });
+        if (response == 200) {
+          this.getAllSongs();
+        } else {
+          console.log("error");
+        }
       }
-      this.getAllPlaylists();
     },
 
     // /// /// // // // /// // // /// // ////
     addSong2Playlist(song, list) {
       this.newSongx(song);
-      this.currentPlaylist = list;
+      this.currentPlaylist.id = list.id;
+      this.currentPlaylist.title = list.title;
       this.insertSongIntoPlaylist();
     },
 

@@ -95,7 +95,7 @@
           <q-card-section class="q-pt-none">
             <q-input
               dense
-              v-model="newPlaylist.name"
+              v-model="newPlaylist.title"
               autofocus
               @keyup.enter="promptP = false"
               label="Title New Playlist"
@@ -365,7 +365,7 @@ export default {
       newPlaylistId: null,
       newPlaylist: {
         id: null,
-        name: null,
+        title: null,
         songs: []
       },
       playlists: [],
@@ -482,11 +482,11 @@ export default {
           this.newSong = response.data;
 
           //Añade una nueva canción a la playlist
-          let response = await this.insertSongsInPlaylist({
+          let response1 = await this.insertSongsInPlaylist({
             id1: this.currentPlaylist.id,
             id2: this.newSong.id
           });
-          if (response.status == 200) {
+          if (response1.status == 200) {
             //En caso de error
             this.newSong.id = null;
             this.newSong.name = null;
@@ -551,15 +551,16 @@ export default {
     },
 
     async addPlaylist() {
-      this.$v.$touch();
-      if (!this.$v.$invalid) {
-        let response = await this.insertPlaylist({
-          name: this.newPlaylist.name,
-          songs: this.newPlaylist.songs
-        });
-        if (response.status == 200) {
-          this.getAllPlaylists();
-        }
+      let response = await this.insertPlaylist({
+        title: this.newPlaylist.title,
+        user_id: "bac7d3dc-80b4-4295-88e8-c39b4324bb9a" //El de Hector
+      });
+      if (response.status == 200) {
+        this.promptP = false;
+        this.newPlaylist.id = response.data.id;
+        this.getAllPlaylists();
+      } else {
+        console.log("error");
       }
     },
 
