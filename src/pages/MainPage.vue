@@ -311,19 +311,20 @@ export default {
         Rap: "orange-8"
       },
 
+      iSong: null,
       newSong: {
         id: null,
         name: null,
-        author: "",
-        album: "",
-        duration: "",
-        release_date: ""
+        author: null,
+        album: null,
+        duration: null,
+        release_date: null
         //genres: []
       },
 
       currentPlaylist: {
         id: null,
-        name: "",
+        name: null,
         songs: []
       },
       newPlaylistIndex: -1,
@@ -406,7 +407,6 @@ export default {
   methods: {
     // MAP ACTIONS LOGIN
     ...mapActions("users", ["login"]),
-
     async onSubmit() {
       await this.login({
         username: "Hector", //this.email,
@@ -423,39 +423,55 @@ export default {
       "updateSongById",
       "deleteSongById"
     ]),
-    async addSong() {
-      if (this.newSong.newName != null) {
-        await this.insertSong({
-          //song: {
-          name: this.newSong.newName,
-          author: this.newSong.newAuthor,
-          album: this.newSong.newAlbum,
-          duration: this.newSong.newDuration,
-          release_date: date.formatDate(
-            this.newSong.newDate,
-            "YYYY-MM-DD hh:mm:ss"
-          )
+    async insertSongIntoPlaylist() {
+      if (this.newSong.name != null) {
+        //Añade una nueva canción al listado de
+        let response = await this.insertSong({
+          name: this.newSong.name,
+          author: this.newSong.author,
+          album: this.newSong.album,
+          duration: this.newSong.duration
+          /*release_date: date.formatDate(
+            this.newSong.release_date,
+            "YYYY-MM-DD hh:mm:ss")*/
         });
-        this.currentPlaylist.songs.push({
-          name: this.newSong.newName,
-          author: this.newSong.newAuthor,
-          album: this.newSong.newAlbum,
-          duration: this.newSong.newDuration,
-          release_date: this.newSong.newDate
-          //genres: this.newSong.newGenres
-        });
+        //Añadimos a currenPlaylist.songs
+        if (response.status == 200) {
+          //En caso de error
+          this.currentPlaylist.songs.push({
+            name: this.newSong.name,
+            author: this.newSong.author,
+            album: this.newSong.album,
+            duration: this.newSong.duration,
+            release_date: this.newSong.release_date
+            //genres: this.newSong.newGenres
+          });
+          this.newSong = response.data;
+
+          //Añade una nueva canción a la playlist
+          let response = await this.insertSongsInPlaylist({
+            id1: this.currentPlaylist.id,
+            id2: this.newSong.id
+          });
+          if (response.status == 200) {
+            //En caso de error
+            this.newSong.id = null;
+            this.newSong.name = null;
+            this.newSong.author = null;
+            this.newSong.album = null;
+            this.newSong.duration = null;
+            this.newSong.release_date = null;
+            //this.newSong.newGenres = [];
+            this.getAllPlaylists();
+          }
+        } else {
+          console.log("error");
+        }
       }
-      this.newSong.id = null;
-      this.newSong.newName = null;
-      this.newSong.newAuthor = "";
-      this.newSong.newAlbum = "";
-      this.newSong.newDuration = "";
-      this.newSong.newDate = "";
-      //(this.newSong.newGenres = []),
       this.prompt = false;
-      this.getAllSongs();
     },
 
+    // MAP ACTIONS
     ...mapActions("playlists", [
       "showAllPlaylists",
       "showAllPlaylistsUserLogged",
@@ -467,7 +483,6 @@ export default {
       "changeSongsInPlaylists"
     ]),
 
-    // MAP ACTIONS
     async getAllPlaylists() {
       this.playlists = await this.showAllPlaylists();
       if (this.isFirst) {
@@ -502,51 +517,39 @@ export default {
       );
     },
 
-    async removePlaylist(playlist) {
-      this.playlists = await this.deletePlaylistById(playlist.id);
-    },
-
     async addPlaylist(playlist) {
       console.log(1);
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        this.newItem.events.push({
-          id: this.newSong.id,
+        this.currentPlaylist.songs.push({
+          /*id: this.newSong.id,
           name: this.newSong.name,
           author: this.newSong.author,
           album: this.newSong.album,
           duration: this.newSong.duration,
-          release_date: this.newSong.release_date
+          release_date: this.newSong.release_date*/
         });
         console.log(2);
         await this.insertPlaylist({
           id: this.newPlaylist.id,
+          name: this.newPlaylist.name,
           songs: this.newPlaylist.songs
         });
         console.log(3);
         //addCalendarDialog == false;
         this.getAllPlaylists();
 
-        this.newSong.name = null;
+        this.newSong.id = null;
         this.newSong.name = null;
         this.newSong.author = null;
         this.newSong.album = null;
         this.newSong.duration = null;
         this.newSong.release_date = null;
-        this.newPlaylist.name = null;
-        this.newPlaylist.songs = [];
       }
     },
 
-    async insertSongIntoPlaylist() {
-      this.addSong();
-      if (this.newSong.newName != null) {
-        await this.insertSongsInPlaylist({
-          id1: this.currentPlaylist.id,
-          id2: this.newSong.id
-        });
-      }
-      this.getAllPlaylists();
+    async removePlaylist(playlist) {
+      this.playlists = await this.deletePlaylistById(playlist.id);
     },
 
     // // /// /// /// // // // // // // /// /// /// //
