@@ -325,24 +325,9 @@ export default {
 
   //Metodos para cambiar data(), no devuelven valores
   methods: {
-    ...mapActions("songs", [
-      "showAllSongs",
-      "showSongById",
-      "insertSong",
-      "updateSongById",
-      "deleteSongById"
-    ]),
-    ...mapActions("playlists", [
-      "showAllPlaylists",
-      "showAllPlaylistsUserLogged",
-      "showPlaylistById",
-      "insertPlaylist",
-      "deletePlaylistById",
-      "insertSongsInPlaylist",
-      "findSongsFromPlaylistId",
-      "changeSongsInPlaylists"
-    ]),
+    // MAP ACTIONS LOGIN
     ...mapActions("users", ["login"]),
+
     async onSubmit() {
       await this.login({
         username: "Hector", //this.email,
@@ -351,14 +336,17 @@ export default {
       //this.$router.push({ name: "playlists" });
     },
 
-    // MAP ACTIONS
+    // MAP ACTIONS SONGS
+    ...mapActions("songs", [
+      "showAllSongs",
+      "showSongById",
+      "insertSong",
+      "updateSongById",
+      "deleteSongById"
+    ]),
     async getAllSongs() {
       this.newList = await this.showAllSongs();
     },
-    async getAllPlaylists() {
-      this.playlists = await this.showAllPlaylists();
-    },
-
     //Para añadir una nueva canción
     async addSong() {
       if (this.newSong.newName != null) {
@@ -391,6 +379,22 @@ export default {
       //(this.newSong.newGenres = []),
       this.prompt = false;
       this.getAllSongs();
+    },
+
+    // MAP ACTIONS PLAYLISTS
+    ...mapActions("playlists", [
+      "showAllPlaylists",
+      "showAllPlaylistsUserLogged",
+      "showPlaylistById",
+      "insertPlaylist",
+      "deletePlaylistById",
+      "insertSongsInPlaylist",
+      "findSongsFromPlaylistId",
+      "changeSongsInPlaylists"
+    ]),
+
+    async getAllPlaylists() {
+      this.playlists = await this.showAllPlaylists();
     },
 
     async insertSongIntoPlaylist() {

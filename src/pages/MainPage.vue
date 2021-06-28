@@ -203,7 +203,11 @@
 
               <!-- Boton Añade Cancion -->
               <q-card-actions align="right" class="text-primary">
-                <q-btn flat label="Add Song" @click="addSong" />
+                <q-btn
+                  flat
+                  label="Add Song"
+                  @click="insertSongIntoPlaylist()"
+                />
                 <q-btn flat label="Cancel" v-close-popup />
               </q-card-actions>
             </q-card>
@@ -290,7 +294,7 @@ export default {
     return {
       left: true,
       valor: 2,
-      currentList: "Flamenco",
+      currentList: "",
       seconds: 0,
       minutes: 0,
       prompt: false,
@@ -309,7 +313,7 @@ export default {
       },
 
       newSong: {
-        id: "",
+        id: null,
         name: null,
         author: "",
         album: "",
@@ -319,6 +323,7 @@ export default {
       },
 
       currentPlaylist: {
+        id: null,
         name: "",
         songs: []
       },
@@ -484,19 +489,23 @@ export default {
       }
     },
 
+    async insertSongIntoPlaylist() {
+      if (this.newSong.newName != null) {
+        await this.insertSongsInPlaylist({
+          id1: this.currentPlaylist.id,
+          id2: this.newSong.id
+        });
+      }
+      this.getAllPlaylists();
+      this.addSong();
+    },
+
     // // /// /// /// // // // // // // /// /// /// //
     //PAGE FUNCTIONS
     //Para realizar el cambio de playlists
     changeList(title) {
       this.currentList = title;
       this.currentPlaylist.name = title;
-      if (title == "Flamenco") {
-        this.currentPlaylist.songs = this.flamenco_list;
-      } else if (title == "Rock") {
-        this.currentPlaylist.songs = this.rock_list;
-      } else {
-        this.currentPlaylist.songs = this.flamenco_list;
-      }
       this.getAllPlaylists();
     },
 
@@ -554,31 +563,11 @@ export default {
       this.newSong = song;
     },
 
-    //Para añadir una nueva canción
+    //Para añadir una nueva canción al currentPlaylist
     addSong() {
       if (this.newSong.name != null) {
-        if (this.currentList == "Flamenco") {
-          this.flamenco_list.push({
-            id: this.newSong.id,
-            name: this.newSong.name,
-            author: this.newSong.author,
-            album: this.newSong.album,
-            duration: this.newSong.duration,
-            release_date: this.newSong.release_date
-            //genres: this.newSong.genres
-          });
-        } else if (this.title == "Rock") {
-          this.rock_list.push({
-            id: this.newSong.id,
-            name: this.newSong.name,
-            author: this.newSong.author,
-            album: this.newSong.album,
-            duration: this.newSong.duration,
-            release_date: this.newSong.release_date
-            //genres: this.newSong.genres
-          });
-        } else {
-          this.flamenco_list.push({
+        if (this.currentList == this.currentPlaylist.name) {
+          this.currentPlaylist.songs.push({
             id: this.newSong.id,
             name: this.newSong.name,
             author: this.newSong.author,
@@ -589,7 +578,7 @@ export default {
           });
         }
       }
-      this.newSong.name = "";
+      this.newSong.id = null;
       this.newSong.name = null;
       this.newSong.author = "";
       this.newSong.album = "";
