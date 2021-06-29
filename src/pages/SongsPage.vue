@@ -474,6 +474,20 @@ export default {
       //this.newSong.newGenres = Song.genres;
     },
 
+    async addPlaylist() {
+      let response = await this.insertPlaylist({
+        title: this.newPlaylist.title,
+        user_id: "bac7d3dc-80b4-4295-88e8-c39b4324bb9a" //El de Hector
+      });
+      if (response.status == 200) {
+        this.promptP = false;
+        this.newPlaylist.id = response.data.id;
+        this.getAllPlaylists();
+      } else {
+        console.log("error");
+      }
+    },
+
     // UTIL
     //Para cambiar el formato de la duracion a min:sec
     minutesFormat(time) {

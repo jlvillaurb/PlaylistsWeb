@@ -10,10 +10,9 @@
         </q-toolbar-title>
       </q-toolbar>
 
-      <q-tabs align="left">
-        <q-route-tab to="./" label="Playlist" />
-        <q-route-tab to="/songs" label="Songs" />
-        <q-route-tab to="/mixer" label="Mixer" />
+      <q-tabs align="left" class="absolute-center">
+        <q-route-tab to="/login" label="Login" />
+        <q-route-tab to="/register" label="Register" />
       </q-tabs>
     </q-header>
 

@@ -1,22 +1,37 @@
 
 const routes = [
-  {
+  { //Playlist Page
     path: '/',
     component: () => import('layouts/NewLayout.vue'),
     children: [
       { path: '', name:"main", component: () => import('pages/MainPage.vue') },
       { path: 'playlist', name:"main", component: () => import('pages/MainPage.vue') },
-      { path: 'playlist/:id', name:"main", component: () => import('pages/MainPage.vue') }
+      { path: 'playlist/:id', name:"main", component: () => import('pages/MainPage.vue') },
     ]
   },
-  {
+  { //Songs Page
     path: '/',
     component: () => import('layouts/NewLayout.vue'),
     children: [
       { path: '/songs', name:"songs", component: () => import('pages/SongsPage.vue') }
     ]
   },
-  {
+  { //Login Page
+    path: '/',
+    component: () => import('src/layouts/LoginRegisterLayout.vue'),
+    children: [
+      { path: '/login', name:"login", component: () => import('pages/LoginPage.vue') }
+    ]
+  },
+  { //Register Page
+    path: '/',
+    component: () => import('src/layouts/LoginRegisterLayout.vue'),
+    children: [
+      { path: '/register', name:"register", component: () => import('pages/RegisterPage.vue') }
+    ]
+  },
+  
+  { //Index Page NOT USED
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
