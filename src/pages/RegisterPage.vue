@@ -1,7 +1,70 @@
 <template>
   <div class="q-pa-md row">
     <div bordered :width="250" class="col-2">
-      Shit
+      <template>
+        <div class="q-pa-md absolute-center" style="max-width: 400px">
+          <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+            <q-input
+              filled
+              v-model="name"
+              label="User *"
+              hint="New User Name"
+              lazy-rules
+              :rules="[val => (val && val.length > 0) || 'Obligatory Field']"
+            />
+
+            <q-input
+              filled
+              v-model="mail"
+              label="Email *"
+              hint="example@mail.com"
+              lazy-rules
+              :rules="[
+                val => (val !== null && val !== '') || 'Obligatory Field'
+              ]"
+            />
+
+            <q-input
+              filled
+              v-model="password"
+              label="Password *"
+              hint="Over 8 characters"
+              lazy-rules
+              :rules="[
+                val => (val !== null && val !== '') || 'Obligatory Field',
+                val =>
+                  (val.length > 8 && val.length < 100) ||
+                  'Must be over 8 characters'
+              ]"
+            />
+            <q-input
+              filled
+              v-model="passwordR"
+              label="Repeat Password *"
+              lazy-rules
+              :rules="[
+                val => (val !== null && val !== '') || 'Obligatory Field',
+                val =>
+                  (val.length > 8 && val.length < 100) ||
+                  'Must be over 8 characters'
+              ]"
+            />
+
+            <q-toggle v-model="accept" label="I accept the license and terms" />
+
+            <div>
+              <q-btn label="Submit" type="submit" color="primary" />
+              <q-btn
+                label="Reset"
+                type="reset"
+                color="primary"
+                flat
+                class="q-ml-sm"
+              />
+            </div>
+          </q-form>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -27,7 +90,13 @@ export default {
       pagination: {
         rowsPerPage: 0
       },
-      today: date.toLocaleString()
+      today: date.toLocaleString(),
+
+      name: null,
+      mail: null,
+      password: null,
+      passwordR: null,
+      accept: false
     };
   },
 
@@ -47,6 +116,14 @@ export default {
         password: "1111" //this.password
       });
       //this.$router.push({ name: "playlists" });
+    },
+
+    onReset() {
+      this.name = null;
+      this.mail = null;
+      this.password = null;
+      this.passwordR = null;
+      this.accept = false;
     },
 
     // MAP ACTIONS SONGS

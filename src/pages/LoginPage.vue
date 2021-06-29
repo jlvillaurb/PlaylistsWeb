@@ -1,7 +1,50 @@
 <template>
   <div class="q-pa-md row">
     <div bordered :width="250" class="col-2">
-      Shit
+      <template>
+        <div class="q-pa-md absolute-center" style="max-width: 400px">
+          <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+            <!--  :to=" userExists  ? 'playlist' : ''"  -->
+            <q-input
+              filled
+              v-model="username"
+              label="User *"
+              hint="User Name"
+              lazy-rules
+              :rules="[val => (val && val.length > 0) || 'Obligatory Field']"
+            />
+
+            <q-input
+              filled
+              v-model="password"
+              :type="isPwd ? 'password' : 'text'"
+              label="Password *"
+              lazy-rules
+              :rules="[
+                val => (val !== null && val !== '') || 'Obligatory Field'
+              ]"
+            />
+            <template v-slot:append>
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd = !isPwd"
+              />
+            </template>
+
+            <div>
+              <q-btn label="Submit" type="submit" color="primary" />
+              <q-btn
+                label="Reset"
+                type="reset"
+                color="primary"
+                flat
+                class="q-ml-sm"
+              />
+            </div>
+          </q-form>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -27,13 +70,18 @@ export default {
       pagination: {
         rowsPerPage: 0
       },
-      today: date.toLocaleString()
+      today: date.toLocaleString(),
+
+      username: null,
+      password: null,
+      isPwd: true,
+      userExists: false
     };
   },
 
   //Se ejecuta todo en el interior de mounted al arrancar la página
   mounted() {
-    this.onSubmit();
+    //this.onSubmit();
   },
 
   //Metodos para cambiar data(), no devuelven valores
@@ -42,11 +90,20 @@ export default {
     ...mapActions("users", ["login"]),
 
     async onSubmit() {
-      await this.login({
-        username: "Hector", //this.email,
-        password: "1111" //this.password
+      let response = await this.login({
+        username: this.username, //this.email,
+        password: this.password //this.password
       });
-      //this.$router.push({ name: "playlists" });
+      if (response.status == 200) {
+        this.userExists = true;
+      }
+      this.userExists = false;
+      //this.$router.push({ name: "/playlists" });
+    },
+
+    onReset() {
+      this.username = null;
+      this.password = null;
     },
 
     // MAP ACTIONS SONGS
