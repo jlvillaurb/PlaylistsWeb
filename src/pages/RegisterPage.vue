@@ -34,8 +34,8 @@
               :rules="[
                 val => (val !== null && val !== '') || 'Obligatory Field',
                 val =>
-                  (val.length > 8 && val.length < 100) ||
-                  'Must be over 8 characters'
+                  (val.length > 0 && val.length < 100) ||
+                  'Must be over 0 characters'
               ]"
             />
             <q-input
@@ -46,8 +46,8 @@
               :rules="[
                 val => (val !== null && val !== '') || 'Obligatory Field',
                 val =>
-                  (val.length > 8 && val.length < 100) ||
-                  'Must be over 8 characters'
+                  (val.length > 0 && val.length < 100) ||
+                  'Must be over 0 characters'
               ]"
             />
 
@@ -102,9 +102,7 @@ export default {
   },
 
   //Se ejecuta todo en el interior de mounted al arrancar la página
-  mounted() {
-    this.onSubmit();
-  },
+  mounted() {},
 
   //Metodos para cambiar data(), no devuelven valores
   methods: {
@@ -115,8 +113,8 @@ export default {
       //Insertamos el nuevo usuario
       let response = await this.insertUser({
         name: this.username,
-        email: this.email,
-        password: this.password
+        password: this.password,
+        email: this.email
       });
       if (response.status == 200) {
         await this.login({

@@ -21,6 +21,11 @@ module.exports = function (/* ctx */) {
       
       'i18n',
       'axios',
+      {
+      path: "persist-client",
+      server: false
+      }
+
     ],
 
     // https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css

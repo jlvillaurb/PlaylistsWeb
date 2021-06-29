@@ -15,10 +15,9 @@ export async function login(context, payload) {
   }
 }
 
-
 export async function insertUser(context, payload) {
   try {
-    const response = await UserServices.insertUser(payload);
+    const response = await UserServices.insert(payload);
     if (response.status >= 200 && response.status < 300) {
       // Show a success notification (like a toast)
       //utils.notify("positive", i18n.t("notify.success"));
@@ -43,4 +42,8 @@ export async function getUserByName(context, payload) {
   } catch (error) {
     //utils.notify("negative", utils.getErrorByCode(error));
   }
+}
+
+export function setUser(context, user) {
+  context.commit("SET_USER", user);
 }

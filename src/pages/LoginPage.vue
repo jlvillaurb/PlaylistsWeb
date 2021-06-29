@@ -89,25 +89,25 @@ export default {
   //Metodos para cambiar data(), no devuelven valores
   methods: {
     // MAP ACTIONS LOGIN
-    ...mapActions("users", ["login", "getUserByName"]),
+    ...mapActions("users", ["login", "getUserByName", "setUser"]),
 
     async onSubmit() {
-      this.response = await this.getUserByName({
-        name: this.username
-      });
-      if (this.response.status == 200) {
-        this.userExists = true;
-        let response1 = await this.login({
+      this.userExists = true;
+      try {
+        let response = await this.login({
           username: this.username, //Hector
           password: this.password //1111
         });
-        if (response1.status == 200) {
+        if (response && response.status == 200) {
+          this.setUser(response.data.username);
           this.$router.push({ name: "main" });
+        } else if (response && response.status == 204) {
+          console.log("Credenciales incorrectas");
         } else {
           console.log("error");
         }
-      } else {
-        console.log("error-No user exists with such name");
+      } catch (error) {
+        console.log(error);
       }
     },
 
