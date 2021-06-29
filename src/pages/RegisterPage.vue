@@ -6,7 +6,7 @@
           <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
             <q-input
               filled
-              v-model="name"
+              v-model="username"
               label="User *"
               hint="New User Name"
               lazy-rules
@@ -15,7 +15,8 @@
 
             <q-input
               filled
-              v-model="mail"
+              v-model="email"
+              type="email"
               label="Email *"
               hint="example@mail.com"
               lazy-rules
@@ -92,8 +93,8 @@ export default {
       },
       today: date.toLocaleString(),
 
-      name: null,
-      mail: null,
+      username: null,
+      email: null,
       password: null,
       passwordR: null,
       accept: false
@@ -115,12 +116,26 @@ export default {
         username: "Hector", //this.email,
         password: "1111" //this.password
       });
+      this.add;
       //this.$router.push({ name: "playlists" });
     },
 
+    async addUser() {
+      this.showLoading();
+      const user = await this.insertUser({
+        name: this.username,
+        email: this.email,
+        password: this.password
+      });
+      if (user.status >= 200 && user.status <= 300) {
+        this.hideLoading();
+      }
+      this.$router.push({ name: "calendars" });
+    },
+
     onReset() {
-      this.name = null;
-      this.mail = null;
+      this.username = null;
+      this.email = null;
       this.password = null;
       this.passwordR = null;
       this.accept = false;

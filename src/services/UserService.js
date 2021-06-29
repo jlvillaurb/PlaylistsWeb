@@ -1,7 +1,7 @@
 import Vue from "vue";
 
 export default {
-  saveUser(payload) {
-    return Vue.prototype.$axios.post(`/users`, payload);
+  insertUser(payload) {
+    return Vue.prototype.$axios.post(`/users/insert`, payload);
   }
 };

@@ -23,14 +23,15 @@
               :rules="[
                 val => (val !== null && val !== '') || 'Obligatory Field'
               ]"
-            />
-            <template v-slot:append>
-              <q-icon
-                :name="isPwd ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                @click="isPwd = !isPwd"
-              />
-            </template>
+            >
+              <template v-slot:append>
+                <q-icon
+                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPwd = !isPwd"
+                />
+              </template>
+            </q-input>
 
             <div>
               <q-btn label="Submit" type="submit" color="primary" />
@@ -96,8 +97,9 @@ export default {
       });
       if (response.status == 200) {
         this.userExists = true;
+      } else {
+        console.log("error");
       }
-      this.userExists = false;
       //this.$router.push({ name: "/playlists" });
     },
 
