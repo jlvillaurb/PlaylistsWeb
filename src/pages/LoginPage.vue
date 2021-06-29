@@ -76,7 +76,8 @@ export default {
       username: null,
       password: null,
       isPwd: true,
-      userExists: false
+      userExists: false,
+      response: null
     };
   },
 
@@ -88,19 +89,26 @@ export default {
   //Metodos para cambiar data(), no devuelven valores
   methods: {
     // MAP ACTIONS LOGIN
-    ...mapActions("users", ["login"]),
+    ...mapActions("users", ["login", "getUserByName"]),
 
     async onSubmit() {
-      let response = await this.login({
-        username: this.username, //this.email,
-        password: this.password //this.password
+      this.response = await this.getUserByName({
+        name: this.username
       });
-      if (response.status == 200) {
+      if (this.response.status == 200) {
         this.userExists = true;
+        let response1 = await this.login({
+          username: this.username, //Hector
+          password: this.password //1111
+        });
+        if (response1.status == 200) {
+          this.$router.push({ name: "main" });
+        } else {
+          console.log("error");
+        }
       } else {
-        console.log("error");
+        console.log("error-No user exists with such name");
       }
-      //this.$router.push({ name: "/playlists" });
     },
 
     onReset() {

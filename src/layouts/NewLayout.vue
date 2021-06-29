@@ -34,7 +34,6 @@ export default {
   data() {
     return {
       left: true,
-      playlists: listplaylists,
       valor: 2
     };
   }

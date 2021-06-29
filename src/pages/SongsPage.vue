@@ -411,7 +411,7 @@ export default {
           release_date: this.newSong.newDate
           //genres: this.newSong.newGenres
         });
-        if (response == 200) {
+        if (response.status == 200) {
           this.getAllSongs();
         } else {
           console.log("error");
@@ -448,7 +448,7 @@ export default {
           id1: this.currentPlaylist.id,
           id2: this.newSong.id
         });
-        if (response == 200) {
+        if (response.status == 200) {
           this.getAllSongs();
         } else {
           console.log("error");

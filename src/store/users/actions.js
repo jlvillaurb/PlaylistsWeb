@@ -29,3 +29,18 @@ export async function insertUser(context, payload) {
     //utils.notify("negative", utils.getErrorByCode(error));
   }
 }
+
+export async function getUserByName(context, payload) {
+  try {
+    const response = await SongService.findUserByName(payload);
+    if (response.status >= 200 && response.status < 300) {
+      // IF list of sectors was returned
+      if (response.data) {
+        // Resolve the promise returning the status
+        return Promise.resolve(response.data);
+      }
+    }
+  } catch (error) {
+    //utils.notify("negative", utils.getErrorByCode(error));
+  }
+}

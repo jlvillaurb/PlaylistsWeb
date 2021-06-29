@@ -4,7 +4,7 @@ export default {
     showAllSongs() {
         return Vue.prototype.$axios.get('/songs');
     },
-    showSongsById(id) {
+    showSongById(id) {
         return Vue.prototype.$axios.get(`/songs/${id}`);
     },
     insertSong(payload) {

@@ -109,28 +109,25 @@ export default {
   //Metodos para cambiar data(), no devuelven valores
   methods: {
     // MAP ACTIONS LOGIN
-    ...mapActions("users", ["login"]),
+    ...mapActions("users", ["login", "insertUser", "getUserByName"]),
 
     async onSubmit() {
-      await this.login({
-        username: "Hector", //this.email,
-        password: "1111" //this.password
-      });
-      this.add;
-      //this.$router.push({ name: "playlists" });
-    },
-
-    async addUser() {
-      this.showLoading();
-      const user = await this.insertUser({
+      //Insertamos el nuevo usuario
+      let response = await this.insertUser({
         name: this.username,
         email: this.email,
         password: this.password
       });
-      if (user.status >= 200 && user.status <= 300) {
-        this.hideLoading();
+      if (response.status == 200) {
+        await this.login({
+          username: this.username,
+          password: this.password
+        });
+        this.$router.push({ name: "login" });
+      } else {
+        console.log("error");
       }
-      this.$router.push({ name: "calendars" });
+      //this.$router.push({ name: "calendars" });
     },
 
     onReset() {
