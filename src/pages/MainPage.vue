@@ -501,7 +501,7 @@ export default {
         this.currentPlaylist.songs.splice(index, 1);
       }
       let response = await this.updateSong(this.newSong);
-      if (response && response.status == 200) {
+      if (response.status == 200) {
         this.currentPlaylist.songs.push({
           id: this.newSong.id,
           name: this.newSong.name,
