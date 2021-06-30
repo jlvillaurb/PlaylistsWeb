@@ -49,12 +49,9 @@ export function setLang(context, lang) {
     }
   }
 
-  export async function updateSongById(context, payload) {
+  export async function updateSong(context, payload) {
     try {
-      const response = await CalendarServices.updateSong(
-        payload.id,
-        payload.playlist
-      );
+      const response = await CalendarServices.update(payload);
       if (response.status >= 200 && response.status < 300) {
         // Show a success notification (like a toast)
         //utils.notify("positive", i18n.t("notify.success"));

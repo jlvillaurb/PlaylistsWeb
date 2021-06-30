@@ -1,8 +1,6 @@
 <template>
   <div class="q-pa-md row">
     <div bordered :width="250" class="col-2">
-      <!-- Left Sidebar-->
-
       <!-- Prompt Add Playlist -->
       <q-btn
         class="col-auto q-mb-sm"
@@ -35,6 +33,7 @@
         </q-card>
       </q-dialog>
 
+      <!-- Left Sidebar-->
       <!-- List User Playlists -->
       <q-list>
         <q-item
@@ -45,7 +44,12 @@
           class="row"
         >
           <q-item-section class="col-auto">
-            <q-icon name="navigate_next" size="md" color="primary" />
+            <q-icon
+              v-if="currentPlaylist.title != 'No Playlists'"
+              name="navigate_next"
+              size="md"
+              color="primary"
+            />
           </q-item-section>
 
           <q-item-section class="col-auto">
@@ -220,7 +224,12 @@
                     class="row"
                   >
                     <q-item-section class="col-auto">
-                      <q-icon name="navigate_next" size="md" color="primary" />
+                      <q-icon
+                        v-if="currentPlaylist.title != 'No Playlists'"
+                        name="navigate_next"
+                        size="md"
+                        color="primary"
+                      />
                     </q-item-section>
 
                     <q-item-section class="col-auto">
@@ -244,7 +253,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import PlaylistsComponents from "components/PlaylistsComponent.vue";
 import SongsComponents from "components/SongsComponent.vue";
 import UsersComponents from "components/UsersComponent.vue";
@@ -373,6 +382,8 @@ export default {
       "updateSongById",
       "deleteSongById"
     ]),
+
+    ...mapGetters("users", ["getUser"]),
     async getAllSongs() {
       this.currentPlaylist.songs = await this.showAllSongs();
     },
@@ -427,8 +438,10 @@ export default {
 
     async getAllPlaylists() {
       this.playlists = await this.findPlaylistsByUserLogged();
-      if (this.playlists.length == 0) {
+      if (!this.playlists) {
         this.currentPlaylist.title = "No Playlists";
+        this.playlists = [];
+        this.playlists.push({ title: this.currentPlaylist.title });
       }
     },
 

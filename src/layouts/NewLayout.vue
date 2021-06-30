@@ -12,15 +12,15 @@
 
       <div class="row">
         <q-tabs align="left" class="col-auto">
-          <q-route-tab to="./" label="Playlist" />
-          <q-route-tab to="/songs" label="Songs" />
+          <q-route-tab to="./" :label="$t('playlists')" />
+          <q-route-tab to="/songs" :label="$t('songs')" />
           <q-route-tab to="/mixer" label="Mixer" />
         </q-tabs>
         <div class="absolute-bottom-right col-auto q-pa-sm">
           <q-btn
             outline
             style="color: white;"
-            label="Log Out"
+            :label="$t('logout')"
             icon="perm_identity"
             @click="logout()"
             to="/login"
@@ -53,8 +53,11 @@ export default {
 
   methods: {
     // MAP ACTIONS LOGIN
-    ...mapActions("users", ["login"]),
-    logout() {}
+    ...mapActions("users", ["setUser"]),
+    async logout() {
+      let newUser = null;
+      await this.setUser(newUser);
+    }
   }
 };
 </script>

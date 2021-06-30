@@ -1,5 +1,6 @@
 <template>
   <div class="q-pa-md row">
+    <!-- BUTTON Edit Song-->
     <q-dialog v-model="editPromp" seamless>
       <q-card style="max-width:900px;width:900px;height:220px">
         <q-card-section>
@@ -70,7 +71,7 @@
 
         <q-card-actions align="right" class="text-primary">
           <q-space></q-space>
-          <q-btn flat label="Save" @click="updateSong()" v-close-popup />
+          <q-btn flat label="Save" @click="updateSongx()" v-close-popup />
           <q-btn flat label="Cancel" v-close-popup />
         </q-card-actions>
       </q-card>
@@ -127,7 +128,7 @@
             <q-item-label
               class="text-black text-h6 text-left"
               :class="
-                currentPlaylist.name == list.title
+                currentPlaylist.title == list.title
                   ? 'text-black text-h6 text-left text-weight-bolder'
                   : 'text-black text-h6 text-left'
               "
@@ -154,7 +155,7 @@
         <!-- TOP -->
         <template v-slot:top>
           <div class="text-h5 text-weight-medium">
-            {{ currentPlaylist.name }}
+            {{ currentPlaylist.title }}
           </div>
           <q-space><!-- Rellena el espacio todo lo que pueda --></q-space>
 
@@ -357,7 +358,7 @@ export default {
 
       currentPlaylist: {
         id: null,
-        name: null,
+        title: null,
         songs: []
       },
       newPlaylist: {
@@ -369,7 +370,7 @@ export default {
         {
           name: "name",
           required: true,
-          label: "Name",
+          label: this.$t("tableName"),
           align: "left",
           field: row => row.name,
           format: val => `${val}`,
@@ -381,28 +382,28 @@ export default {
         {
           name: "author",
           align: "left",
-          label: "author",
+          label: this.$t("tableAuthor"),
           field: "author",
           sortable: true
         },
         {
           name: "album",
           align: "center",
-          label: "Album",
+          label: this.$t("tableAlbum"),
           field: "album",
           sortable: true
         },
         {
           name: "duration",
           align: "center",
-          label: "Duration",
+          label: this.$t("tableDuration"),
           field: "duration",
           sortable: true
         },
         {
           name: "release_date",
           align: "center",
-          label: "Release Date",
+          label: this.$t("tableReleaseDate"),
           field: "release_date",
           sortable: true
         },
@@ -416,7 +417,7 @@ export default {
         {
           name: "editSong",
           align: "center",
-          label: "Edit Song",
+          label: this.$t("editSong"),
           field: "",
           sortable: false
         }
@@ -441,7 +442,7 @@ export default {
       "showAllSongs",
       "showSongById",
       "insertSong",
-      "updateSongById",
+      "updateSong",
       "deleteSongById"
     ]),
     async insertSongIntoPlaylist() {
@@ -492,6 +493,29 @@ export default {
       this.prompt = false;
     },
 
+    async updateSongx() {
+      let index = this.currentPlaylist.songs.findIndex(
+        item => item.id == this.newSong.id
+      );
+      if (index > -1) {
+        this.currentPlaylist.songs.splice(index, 1);
+      }
+      let response = await this.updateSong(this.newSong);
+      if (response && response == 200) {
+        /*this.currentPlaylist.songs.push({
+          id: this.newSong.id,
+          name: this.newSong.name,
+          author: this.newSong.author,
+          album: this.newSong.album,
+          duration: this.newSong.duration,
+          release_date: this.newSong.release_date
+          //genres: this.newSong.genres
+        });*/
+      } else {
+        console.log("error");
+      }
+    },
+
     // MAP ACTIONS
     ...mapActions("playlists", [
       "showAllPlaylists",
@@ -507,37 +531,40 @@ export default {
     async getAllPlaylists() {
       //this.playlists = await this.showAllPlaylists();
       this.playlists = await this.findPlaylistsByUserLogged();
-      if (this.isFirst) {
-        if (this.$route.params.id) {
-          for (let i = 0; i < this.playlists.length; i++) {
-            if (this.$route.params.id == this.playlists[i].title) {
-              this.currentPlaylist.name = this.$route.params.id;
-              break;
-            } else {
-              this.currentPlaylist.name = "Flamenco";
+      if (this.playlists) {
+        if (this.isFirst) {
+          if (this.$route.params.id) {
+            for (let i = 0; i < this.playlists.length; i++) {
+              if (this.$route.params.id == this.playlists[i].title) {
+                this.currentPlaylist.title = this.$route.params.id;
+                break;
+              } else {
+                this.currentPlaylist.title = "Flamenco";
+              }
             }
+          } else if (this.playlists.length > 0) {
+            this.currentPlaylist.title = this.playlists[0].title;
+          } else {
+            this.currentPlaylist.title = "No Playlists Created";
           }
-        } else if (this.playlists.length > 0) {
-          this.currentPlaylist.name = this.playlists[0].title;
-        } else {
-          this.currentPlaylist.name = "No Playlists Created";
+          this.isFirst = false;
         }
-        this.isFirst = false;
       }
-
       this.getSongsByPlaylist();
     },
 
     //Cargamos las canciones en currentPlaylist y guardamos el id
     async getSongsByPlaylist() {
-      let selectedPlaylist = this.playlists.find(
-        item => item.title == this.currentPlaylist.name
-      );
-      if (selectedPlaylist) {
-        this.currentPlaylist.id = selectedPlaylist.id;
-        this.currentPlaylist.songs = await this.findSongsFromPlaylistId(
-          selectedPlaylist.id
+      if (this.playlists) {
+        let selectedPlaylist = this.playlists.find(
+          item => item.title == this.currentPlaylist.title
         );
+        if (selectedPlaylist) {
+          this.currentPlaylist.id = selectedPlaylist.id;
+          this.currentPlaylist.songs = await this.findSongsFromPlaylistId(
+            selectedPlaylist.id
+          );
+        }
       }
     },
 
@@ -562,7 +589,7 @@ export default {
     //PAGE FUNCTIONS
     //Para realizar el cambio de playlists
     changeList(title) {
-      this.currentPlaylist.name = title;
+      this.currentPlaylist.title = title;
       this.getAllPlaylists();
     },
 
@@ -596,24 +623,6 @@ export default {
     editSongx(song) {
       this.saveSong(song);
       this.editPromp = true;
-    },
-
-    updateSong() {
-      let index = this.currentPlaylist.songs.findIndex(
-        item => item.id == this.newSong.id
-      );
-      if (index > -1) {
-        this.currentPlaylist.songs.splice(index, 1);
-      }
-      this.currentPlaylist.songs.push({
-        id: this.newSong.id,
-        name: this.newSong.name,
-        author: this.newSong.author,
-        album: this.newSong.album,
-        duration: this.newSong.duration,
-        release_date: this.newSong.release_date
-        //genres: this.newSong.genres
-      });
     },
 
     saveSong(song) {

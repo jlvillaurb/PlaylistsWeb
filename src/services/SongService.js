@@ -10,8 +10,8 @@ export default {
     insertSong(payload) {
         return Vue.prototype.$axios.post(`/songs`, payload);
     },
-    updateSong(payload) {
-        return Vue.prototype.$axios.put(`/songs/${id}`, payload);
+    update(payload) {
+        return Vue.prototype.$axios.put(`/songs/update`, payload);
     },
     deleteSongById(id) {
         return Vue.prototype.$axios.delete(`/songs/${id}`);
