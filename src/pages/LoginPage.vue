@@ -95,8 +95,8 @@ export default {
       this.userExists = true;
       try {
         let response = await this.login({
-          username: this.username, //Hector
-          password: this.password //1111
+          username: this.username,
+          password: this.password
         });
         if (response && response.status == 200) {
           this.setUser(response.data.username);

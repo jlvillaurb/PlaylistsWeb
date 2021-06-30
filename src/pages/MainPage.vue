@@ -102,7 +102,7 @@
             />
           </q-card-section>
 
-          <!-- Boton Añade Cancion -->
+          <!-- Button Add Playlist -->
           <q-card-actions align="right" class="text-primary">
             <q-btn flat label="Add" @click="addPlaylist()" />
             <q-btn flat label="Cancel" v-close-popup />
@@ -110,7 +110,7 @@
         </q-card>
       </q-dialog>
 
-      <!-- Lista de Playlists del Usuario -->
+      <!-- User Playlist List -->
       <q-list>
         <q-item
           clickable
@@ -139,7 +139,7 @@
       </q-list>
     </div>
 
-    <!-- Playlist of currentPlaylist.name -->
+    <!-- Main Body of Playlist of currentPlaylist -->
     <div class="q-pa-md col-10">
       <q-table
         :data="currentPlaylist.songs"
@@ -317,7 +317,6 @@ import PlaylistsComponents from "components/PlaylistsComponent.vue";
 import SongsComponents from "components/SongsComponent.vue";
 import UsersComponents from "components/UsersComponent.vue";
 import { date } from "quasar";
-import playlists from "src/store/playlists";
 
 export default {
   name: "MainLayout",
@@ -361,12 +360,8 @@ export default {
         name: null,
         songs: []
       },
-      newPlaylistIndex: -1,
-      newPlaylistId: null,
       newPlaylist: {
-        id: null,
-        title: null,
-        songs: []
+        title: null
       },
       playlists: [],
 
@@ -439,14 +434,7 @@ export default {
 
   methods: {
     // MAP ACTIONS LOGIN
-    ...mapActions("users", ["login"]),
-    async onSubmit() {
-      await this.login({
-        username: "Hector", //this.email,
-        password: "1111" //this.password
-      });
-      //this.$router.push({ name: "playlists" });
-    },
+    ...mapActions("users", ["login", "getUserByName", "setUser"]),
 
     // MAP ACTIONS SONGS
     ...mapActions("songs", [
@@ -507,7 +495,7 @@ export default {
     // MAP ACTIONS
     ...mapActions("playlists", [
       "showAllPlaylists",
-      "showAllPlaylistsUserLogged",
+      "findPlaylistsByUserLogged",
       "showPlaylistById",
       "insertPlaylist",
       "deletePlaylistById",
@@ -517,7 +505,8 @@ export default {
     ]),
 
     async getAllPlaylists() {
-      this.playlists = await this.showAllPlaylists();
+      //this.playlists = await this.showAllPlaylists();
+      this.playlists = await this.findPlaylistsByUserLogged();
       if (this.isFirst) {
         if (this.$route.params.id) {
           for (let i = 0; i < this.playlists.length; i++) {
@@ -544,20 +533,21 @@ export default {
       let selectedPlaylist = this.playlists.find(
         item => item.title == this.currentPlaylist.name
       );
-      this.currentPlaylist.id = selectedPlaylist.id;
-      this.currentPlaylist.songs = await this.findSongsFromPlaylistId(
-        selectedPlaylist.id
-      );
+      if (selectedPlaylist) {
+        this.currentPlaylist.id = selectedPlaylist.id;
+        this.currentPlaylist.songs = await this.findSongsFromPlaylistId(
+          selectedPlaylist.id
+        );
+      }
     },
 
     async addPlaylist() {
       let response = await this.insertPlaylist({
-        title: this.newPlaylist.title,
-        user_id: "bac7d3dc-80b4-4295-88e8-c39b4324bb9a" //El de Hector
+        title: this.newPlaylist.title
+        //user_id: "bac7d3dc-80b4-4295-88e8-c39b4324bb9a" //El de Hector
       });
       if (response.status == 200) {
         this.promptP = false;
-        this.newPlaylist.id = response.data.id;
         this.getAllPlaylists();
       } else {
         console.log("error");

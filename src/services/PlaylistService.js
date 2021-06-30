@@ -4,8 +4,8 @@ export default {
     showAllPlaylists() {
         return Vue.prototype.$axios.get('/playlists');
     },
-    showAllPlaylistsUserLogged(id) {
-        return Vue.prototype.$axios.get(`/playlistsuser/${id}`);
+    findPlaylistsByUserLogged() {
+        return Vue.prototype.$axios.get(`/playlists/user`);
     },
     showPlaylistById(id) {
         return Vue.prototype.$axios.get(`/playlists/${id}`);
@@ -13,7 +13,7 @@ export default {
     updatePlaylist(id, payload) {
         return Vue.prototype.$axios.put(`/playlists/${id}`, payload);
     },
-    insertPlaylist(payload) {
+    insert(payload) {
         return Vue.prototype.$axios.post('/playlists', payload);
     },
     deletePlaylistById(id) {

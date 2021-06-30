@@ -10,11 +10,23 @@
         </q-toolbar-title>
       </q-toolbar>
 
-      <q-tabs align="left">
-        <q-route-tab to="./" label="Playlist" />
-        <q-route-tab to="/songs" label="Songs" />
-        <q-route-tab to="/mixer" label="Mixer" />
-      </q-tabs>
+      <div class="row">
+        <q-tabs align="left" class="col-auto">
+          <q-route-tab to="./" label="Playlist" />
+          <q-route-tab to="/songs" label="Songs" />
+          <q-route-tab to="/mixer" label="Mixer" />
+        </q-tabs>
+        <div class="absolute-bottom-right col-auto q-pa-sm">
+          <q-btn
+            outline
+            style="color: white;"
+            label="Log Out"
+            icon="perm_identity"
+            @click="logout()"
+            to="/login"
+          />
+        </div>
+      </div>
     </q-header>
 
     <q-page-container>
@@ -24,6 +36,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import PlaylistsComponents from "components/PlaylistsComponent.vue";
 import SongsComponents from "components/SongsComponent.vue";
 import UsersComponents from "components/UsersComponent.vue";
@@ -36,6 +49,12 @@ export default {
       left: true,
       valor: 2
     };
+  },
+
+  methods: {
+    // MAP ACTIONS LOGIN
+    ...mapActions("users", ["login"]),
+    logout() {}
   }
 };
 </script>

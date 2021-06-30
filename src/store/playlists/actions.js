@@ -19,9 +19,9 @@ export function setLang(context, lang) {
     }
   }
 
-  export async function showAllPlaylistsUserLogged(context) {
+  export async function findPlaylistsByUserLogged(context) {
     try {
-      const response = await PlaylistService.showAllPlaylistsUserLogged();
+      const response = await PlaylistService.findPlaylistsByUserLogged();
   
       if (response.status >= 200 && response.status < 300) {
         // IF list of sectors was returned
@@ -53,7 +53,7 @@ export function setLang(context, lang) {
 
   export async function insertPlaylist(context, payload) {
     try {
-      const response = await PlaylistService.insertPlaylist(payload);
+      const response = await PlaylistService.insert(payload);
       if (response.status >= 200 && response.status < 300) {
         // Show a success notification (like a toast)
         //utils.notify("positive", i18n.t("notify.success"));
