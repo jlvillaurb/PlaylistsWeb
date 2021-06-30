@@ -501,8 +501,8 @@ export default {
         this.currentPlaylist.songs.splice(index, 1);
       }
       let response = await this.updateSong(this.newSong);
-      if (response && response == 200) {
-        /*this.currentPlaylist.songs.push({
+      if (response && response.status == 200) {
+        this.currentPlaylist.songs.push({
           id: this.newSong.id,
           name: this.newSong.name,
           author: this.newSong.author,
@@ -510,7 +510,8 @@ export default {
           duration: this.newSong.duration,
           release_date: this.newSong.release_date
           //genres: this.newSong.genres
-        });*/
+        });
+        this.getSongsByPlaylist();
       } else {
         console.log("error");
       }
