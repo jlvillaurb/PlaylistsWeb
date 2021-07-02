@@ -10,6 +10,7 @@ export default {
   cancelButton: "Cancelar",
   saveButton: "Guardar",
   addSongToPlaylist: "Añadir Cancion a Playlist",
+  addSong: "Añadir Canción",
   addNewSong: "Crear Cancion",
   addPlaylist: "Crear Nueva Playlist",
   noPlaylistsCreated: "Ninguna Playlist Creada",

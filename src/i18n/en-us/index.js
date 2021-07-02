@@ -10,6 +10,7 @@ export default {
   cancelButton: "Cancel",
   saveButton: "Save",
   addSongToPlaylist: "Add Song to Playlist",
+  addSong: "Add Song",
   addNewSong: "Add New Song",
   addPlaylist: "Add New Playlist",
   noPlaylistsCreated: "No Playlists Created",

@@ -75,12 +75,12 @@
       >
         <!-- TOP -->
         <template v-slot:top>
-          <div class="text-h5 text-weight-medium">Songs</div>
+          <div class="text-h5 text-weight-medium">{{ $t("songs") }}</div>
           <q-space><!-- Rellena el espacio todo lo que pueda --></q-space>
           <q-btn
             class="col-auto"
             color="primary"
-            label="Add Song"
+            :label="$t('addNewSong')"
             @click="prompt = true"
           />
 
@@ -88,7 +88,7 @@
           <q-dialog v-model="prompt" persistent>
             <q-card style="min-width: 350px">
               <q-card-section>
-                <div class="text-h6">Add Your New Song</div>
+                <div class="text-h6">{{ $t("addNewSong") }}</div>
               </q-card-section>
 
               <q-card-section class="q-pt-none">
@@ -97,21 +97,21 @@
                   v-model="newSong.newName"
                   autofocus
                   @keyup.enter="prompt = false"
-                  label="Name"
+                  :label="$t('tableName')"
                 />
                 <q-input
                   dense
                   v-model="newSong.newAuthor"
                   autofocus
                   @keyup.enter="prompt = false"
-                  label="Author"
+                  :label="$t('tableAuthor')"
                 />
                 <q-input
                   dense
                   v-model="newSong.newAlbum"
                   autofocus
                   @keyup.enter="prompt = false"
-                  label="Album"
+                  :label="$t('tableAlbum')"
                 />
                 <q-input
                   dense
@@ -119,7 +119,7 @@
                   autofocus
                   mask="####"
                   @keyup.enter="prompt = false"
-                  label="Duration (sec)"
+                  :label="$t('tableDuration')"
                 />
                 <!-- Release_Date de la nueva cancion -->
                 <q-input
@@ -128,7 +128,7 @@
                   v-model="newSong.newDate"
                   mask="date"
                   :rules="['date']"
-                  label="Release Date"
+                  :label="$t('tableReleaseDate')"
                   :options="dateOptions"
                 >
                   <template v-slot:append>
@@ -156,8 +156,8 @@
 
               <!-- Boton Añade Cancion -->
               <q-card-actions align="right" class="text-primary">
-                <q-btn flat label="Add Song" @click="addSong" />
-                <q-btn flat label="Cancel" v-close-popup />
+                <q-btn flat :label="$t('addSong')" @click="addSong" />
+                <q-btn flat :label="$t('cancelButton')" v-close-popup />
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -306,7 +306,7 @@ export default {
         {
           name: "name",
           required: true,
-          label: "Name",
+          label: this.$t("songs"),
           align: "left",
           field: row => row.name,
           format: val => `${val}`,
@@ -318,28 +318,28 @@ export default {
         {
           name: "author",
           align: "left",
-          label: "Author",
+          label: this.$t("tableAuthor"),
           field: "author",
           sortable: true
         },
         {
           name: "album",
           align: "center",
-          label: "Album",
+          label: this.$t("tableAlbum"),
           field: "album",
           sortable: true
         },
         {
           name: "duration",
           align: "center",
-          label: "Duration",
+          label: this.$t("tableDuration"),
           field: "duration",
           sortable: true
         },
         {
           name: "release_date",
           align: "center",
-          label: "Release Date",
+          label: this.$t("tableReleaseDate"),
           field: "release_date",
           sortable: true
         },
@@ -353,7 +353,7 @@ export default {
         {
           name: "addSong",
           align: "center",
-          label: "Add Song",
+          label: this.$t("addSongToPlaylist"),
           field: "",
           sortable: false
         }

@@ -72,7 +72,12 @@
         <q-card-actions align="right" class="text-primary">
           <q-space></q-space>
           <q-btn flat label="Save" @click="updateSongx()" v-close-popup />
-          <q-btn flat label="Cancel" v-close-popup />
+          <q-btn
+            flat
+            label="Cancel"
+            @click="getSongsByPlaylist()"
+            v-close-popup
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
