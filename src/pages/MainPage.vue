@@ -13,7 +13,7 @@
             v-model="newSong.name"
             autofocus
             @keyup.enter="editPromp = false"
-            label="Name"
+            :label="$t('tableName')"
             class="col-auto"
           /><q-space></q-space>
           <q-input
@@ -21,7 +21,7 @@
             v-model="newSong.author"
             autofocus
             @keyup.enter="editPromp = false"
-            label="author"
+            :label="$t('tableAuthor')"
             class="col-auto"
           /><q-space></q-space>
           <q-input
@@ -29,7 +29,7 @@
             v-model="newSong.album"
             autofocus
             @keyup.enter="editPromp = false"
-            label="Album"
+            :label="$t('tableAlbum')"
             class="col-auto"
           /><q-space></q-space>
           <q-input
@@ -38,7 +38,7 @@
             autofocus
             mask="####"
             @keyup.enter="editPromp = false"
-            label="Duration (sec)"
+            :label="$t('tableDuration')"
             class="col-auto"
           /><q-space></q-space>
           <q-input
@@ -47,7 +47,7 @@
             v-model="newSong.release_date"
             mask="date"
             :rules="['date']"
-            label="Release Date"
+            :label="$t('tableReleaseDate')"
             :options="dateOptions"
             class="col-2"
           >
@@ -60,7 +60,12 @@
                 >
                   <q-date v-model="newSong.release_date">
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
+                      <q-btn
+                        v-close-popup
+                        :label="$t('cancelButton')"
+                        color="primary"
+                        flat
+                      />
                     </div>
                   </q-date>
                 </q-popup-proxy>
@@ -71,10 +76,15 @@
 
         <q-card-actions align="right" class="text-primary">
           <q-space></q-space>
-          <q-btn flat label="Save" @click="updateSongx()" v-close-popup />
           <q-btn
             flat
-            label="Cancel"
+            :label="$t('saveButton')"
+            @click="updateSongx()"
+            v-close-popup
+          />
+          <q-btn
+            flat
+            :label="$t('cancelButton')"
             @click="getSongsByPlaylist()"
             v-close-popup
           />
@@ -168,7 +178,7 @@
           <q-btn
             class="col-auto"
             color="primary"
-            label="Add Song to Playlist"
+            :label="$t('addSongToPlaylist')"
             @click="prompt = true"
           />
           <q-dialog v-model="prompt" persistent>
@@ -183,21 +193,21 @@
                   v-model="newSong.name"
                   autofocus
                   @keyup.enter="prompt = false"
-                  label="Name"
+                  :label="$t('tableName')"
                 />
                 <q-input
                   dense
                   v-model="newSong.author"
                   autofocus
                   @keyup.enter="prompt = false"
-                  label="author"
+                  :label="$t('tableAuthor')"
                 />
                 <q-input
                   dense
                   v-model="newSong.album"
                   autofocus
                   @keyup.enter="prompt = false"
-                  label="Album"
+                  :label="$t('tableAlbum')"
                 />
                 <q-input
                   dense
@@ -205,7 +215,7 @@
                   autofocus
                   mask="####"
                   @keyup.enter="prompt = false"
-                  label="Duration (sec)"
+                  :label="$t('tableDuration')"
                 />
                 <!-- Release_Date de la nueva cancion -->
                 <q-input
@@ -214,7 +224,7 @@
                   v-model="newSong.release_date"
                   mask="date"
                   :rules="['date']"
-                  label="Release Date"
+                  :label="$t('tableReleaseDate')"
                   :options="dateOptions"
                 >
                   <template v-slot:append>
@@ -228,7 +238,7 @@
                           <div class="row items-center justify-end">
                             <q-btn
                               v-close-popup
-                              label="Close"
+                              :label="$t('cancelButton')"
                               color="primary"
                               flat
                             />
@@ -244,10 +254,10 @@
               <q-card-actions align="right" class="text-primary">
                 <q-btn
                   flat
-                  label="Add Song"
+                  :label="$t('addSong')"
                   @click="insertSongIntoPlaylist()"
                 />
-                <q-btn flat label="Cancel" v-close-popup />
+                <q-btn flat :label="$t('cancelButton')" v-close-popup />
               </q-card-actions>
             </q-card>
           </q-dialog>

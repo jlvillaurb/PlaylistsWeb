@@ -142,7 +142,7 @@
                           <div class="row items-center justify-end">
                             <q-btn
                               v-close-popup
-                              label="Close"
+                              :label="$t('cancelButton')"
                               color="primary"
                               flat
                             />
@@ -156,7 +156,7 @@
 
               <!-- Boton Añade Cancion -->
               <q-card-actions align="right" class="text-primary">
-                <q-btn flat :label="$t('addSong')" @click="addSong" />
+                <q-btn flat :label="$t('addSong')" @click="addSong()" />
                 <q-btn flat :label="$t('cancelButton')" v-close-popup />
               </q-card-actions>
             </q-card>

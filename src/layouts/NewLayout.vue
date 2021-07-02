@@ -8,10 +8,21 @@
           </q-avatar>
           Mixer
         </q-toolbar-title>
+        <div class="q-mr-sm">
+          <q-btn
+            v-for="l in langOptions"
+            class="q-mr-sm"
+            :key="l.value"
+            :color="l.value == lang ? 'white' : 'primary'"
+            :text-color="l.value == lang ? 'primary' : 'white'"
+            @click="changeLanguage(l.value)"
+            >{{ l.label }}</q-btn
+          >
+        </div>
       </q-toolbar>
 
       <div class="row">
-        <q-tabs align="left" class="col-auto">
+        <q-tabs align="true" class="col-auto">
           <q-route-tab to="./" :label="$t('playlists')" />
           <q-route-tab to="/songs" :label="$t('songs')" />
           <q-route-tab to="/mixer" label="Mixer" />
@@ -46,17 +57,26 @@ export default {
   components: { PlaylistsComponents, SongsComponents, UsersComponents },
   data() {
     return {
-      left: true,
-      valor: 2
+      lang: this.$i18n.locale, // Default lang or lang set by user
+      langOptions: [
+        { value: "en-us", label: "EN" },
+        { value: "es", label: "ES" }
+      ]
     };
   },
 
   methods: {
     // MAP ACTIONS LOGIN
-    ...mapActions("users", ["setUser"]),
+    ...mapActions("users", ["setUser", "setLang"]),
     async logout() {
       let newUser = null;
       await this.setUser(newUser);
+    },
+
+    async changeLanguage(lang) {
+      this.lang = lang;
+      this.$i18n.locale = lang;
+      this.setLang(newLang);
     }
   }
 };

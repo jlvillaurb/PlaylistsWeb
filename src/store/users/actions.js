@@ -1,6 +1,10 @@
 import UserServices from "src/services/UserService";
 import LoginServices from "src/services/LoginService";
 
+export function setLang(context, lang) {
+  context.commit("SET_LANG", lang);
+}
+
 export async function login(context, payload) {
   try {
     const response = await LoginServices.login(payload);
