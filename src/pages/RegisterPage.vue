@@ -7,8 +7,8 @@
             <q-input
               filled
               v-model="username"
-              label="User *"
-              hint="New User Name"
+              :label="$t('user')"
+              :hint="$t('userName')"
               lazy-rules
               :rules="[val => (val && val.length > 0) || 'Obligatory Field']"
             />
@@ -28,7 +28,7 @@
             <q-input
               filled
               v-model="password"
-              label="Password *"
+              :label="$t('password')"
               hint="Over 8 characters"
               lazy-rules
               :rules="[
@@ -41,7 +41,7 @@
             <q-input
               filled
               v-model="passwordR"
-              label="Repeat Password *"
+              :label="$t('repeatPassword')"
               lazy-rules
               :rules="[
                 val => (val !== null && val !== '') || 'Obligatory Field',
@@ -51,12 +51,12 @@
               ]"
             />
 
-            <q-toggle v-model="accept" label="I accept the license and terms" />
+            <q-toggle v-model="accept" :label="$t('termsAndAgrement')" />
 
             <div>
-              <q-btn label="Submit" type="submit" color="primary" />
+              <q-btn :label="$t('submit')" type="submit" color="primary" />
               <q-btn
-                label="Reset"
+                :label="$t('reset')"
                 type="reset"
                 color="primary"
                 flat

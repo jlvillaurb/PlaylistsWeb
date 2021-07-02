@@ -105,7 +105,7 @@
       <q-dialog v-model="promptP" persistent>
         <q-card style="min-width: 350px">
           <q-card-section>
-            <div class="text-h6">Add New Playlist</div>
+            <div class="text-h6">{{ $t("addPlaylist") }}</div>
           </q-card-section>
 
           <q-card-section class="q-pt-none">
@@ -114,14 +114,14 @@
               v-model="newPlaylist.title"
               autofocus
               @keyup.enter="promptP = false"
-              label="Title New Playlist"
+              :label="$t('playlistTitle')"
             />
           </q-card-section>
 
           <!-- Button Add Playlist -->
           <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Add" @click="addPlaylist()" />
-            <q-btn flat label="Cancel" v-close-popup />
+            <q-btn flat :label="$t('addPlaylist')" @click="addPlaylist()" />
+            <q-btn flat :label="$t('cancelButton')" v-close-popup />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -379,9 +379,19 @@ export default {
       newPlaylist: {
         title: null
       },
-      playlists: [],
+      playlists: []
+    };
+  },
 
-      columns: [
+  //Todo en el interior de mounted se ejecura al arrancar la página
+  mounted() {
+    //Si hay un id de entrada, tomamos ese valor para enseñar la playlist correspondiente
+    this.getAllPlaylists();
+  },
+
+  computed: {
+    columns() {
+      return [
         {
           name: "name",
           required: true,
@@ -438,14 +448,8 @@ export default {
         }
         //{ name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
         //{ name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
-      ]
-    };
-  },
-
-  //Todo en el interior de mounted se ejecura al arrancar la página
-  mounted() {
-    //Si hay un id de entrada, tomamos ese valor para enseñar la playlist correspondiente
-    this.getAllPlaylists();
+      ];
+    }
   },
 
   methods: {

@@ -8,8 +8,7 @@
             <q-input
               filled
               v-model="username"
-              label="User *"
-              hint="User Name"
+              :label="$t('user')"
               lazy-rules
               :rules="[val => (val && val.length > 0) || 'Obligatory Field']"
             />
@@ -18,7 +17,7 @@
               filled
               v-model="password"
               :type="isPwd ? 'password' : 'text'"
-              label="Password *"
+              :label="$t('password')"
               lazy-rules
               :rules="[
                 val => (val !== null && val !== '') || 'Obligatory Field'
@@ -34,9 +33,9 @@
             </q-input>
 
             <div>
-              <q-btn label="Submit" type="submit" color="primary" />
+              <q-btn :label="$t('submit')" type="submit" color="primary" />
               <q-btn
-                label="Reset"
+                :label="$t('reset')"
                 type="reset"
                 color="primary"
                 flat

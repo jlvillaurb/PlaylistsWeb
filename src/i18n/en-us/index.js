@@ -11,14 +11,26 @@ export default {
   saveButton: "Save",
   addSongToPlaylist: "Add Song to Playlist",
   addSong: "Add Song",
+  editSong: "Edit Song",
   addNewSong: "Add New Song",
-  addPlaylist: "Add New Playlist",
+  addPlaylist: "Add Playlist",
+  playlistTitle: "Playlist Title",
   noPlaylistsCreated: "No Playlists Created",
   tableName: "Name",
   tableAuthor: "Author",
   tableAlbum: "Album",
   tableDuration: "Duration",
   tableReleaseDate: "Release Date",
-  editSong: "Edit Song",
+
+  login: "Log In",
+  register: "Register",
+  user: "User *",
+  userName: "New User Name",
+  password: "Password *",
+  repeatPassword: "Repeat Password *",
+  submit: "Submit",
+  reset: "Reset",
+  termsAndAgrement: "I accept the license and terms",
+
   logout: "Log Out"
 }

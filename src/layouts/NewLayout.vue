@@ -8,10 +8,11 @@
           </q-avatar>
           Mixer
         </q-toolbar-title>
-        <div class="q-mr-sm">
+        <div>
           <q-btn
             v-for="l in langOptions"
-            class="q-mr-sm"
+            class="q-mx-sm"
+            size="10px"
             :key="l.value"
             :color="l.value == lang ? 'white' : 'primary'"
             :text-color="l.value == lang ? 'primary' : 'white'"
@@ -22,8 +23,8 @@
       </q-toolbar>
 
       <div class="row">
-        <q-tabs align="true" class="col-auto">
-          <q-route-tab to="./" :label="$t('playlists')" />
+        <q-tabs class="col-auto">
+          <q-route-tab to="/playlist" :label="$t('playlists')" />
           <q-route-tab to="/songs" :label="$t('songs')" />
           <q-route-tab to="/mixer" label="Mixer" />
         </q-tabs>
@@ -76,7 +77,10 @@ export default {
     async changeLanguage(lang) {
       this.lang = lang;
       this.$i18n.locale = lang;
-      this.setLang(newLang);
+      import(`quasar/lang/${lang}`).then(language => {
+        this.$q.lang.set(language.default);
+      });
+      this.setLang(lang);
     }
   }
 };

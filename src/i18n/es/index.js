@@ -12,7 +12,8 @@ export default {
   addSongToPlaylist: "Añadir Cancion a Playlist",
   addSong: "Añadir Canción",
   addNewSong: "Crear Cancion",
-  addPlaylist: "Crear Nueva Playlist",
+  addPlaylist: "Crear Playlist",
+  playlistTitle: "Titulo Playlist",
   noPlaylistsCreated: "Ninguna Playlist Creada",
   tableName: "Nombre",
   tableAuthor: "Autor",
@@ -20,5 +21,16 @@ export default {
   tableDuration: "Duración",
   tableReleaseDate: "Fecha Publicación",
   editSong: "Editar Canción",
+
+  login: "Inicio de Sesión",
+  register: "Registro",
+  user: "Usuario",
+  userName: "Nuevo Nombre Usuario",
+  password: "Contraseña",
+  repeatPassword: "Repetir Contraseña",
+  submit: "Entrar",
+  reset: "Borrar",
+  termsAndAgrement: "Acepto los teminos y el acuerdo.",
+
   logout: "Cerrar Sesión"
 }
